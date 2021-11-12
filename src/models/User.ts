@@ -12,4 +12,4 @@ let UserSchema = new Schema({
 
 let UserModel = model('Users', UserSchema)
 
-export default UserModel
+export { UserModel, UserSchema }

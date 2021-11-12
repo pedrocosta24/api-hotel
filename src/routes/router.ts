@@ -14,5 +14,8 @@ router.delete("/users/:id", usersController.delete)
 
 const roomsController = new RoomsController();
 
-router.post("/rooms", usersController.create)
-// router.get("/rooms", usersController.findAll)
+router.post("/rooms", roomsController.create)
+router.get("/rooms", roomsController.findAll)
+router.get("/rooms/:id", roomsController.findByID)
+router.put("/rooms/:id", roomsController.update)
+router.delete("/rooms/:id", roomsController.delete)
