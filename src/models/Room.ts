@@ -1,7 +1,4 @@
 import { model, Schema } from "mongoose"
-import { UserSchema } from '../models/User'
-
-const user = new Schema({ UserSchema });
 
 let RoomSchema = new Schema({
   room_no: { type: String, required: true },
@@ -12,7 +9,14 @@ let RoomSchema = new Schema({
   price_night: { type: Number, required: true },
   images: { type: String, required: true },
   bookings: [{
-    user: { type: user },
+    user: { 
+      name: { type: String, required: true },
+      email: { type: String, required: true, unique: true },
+      password: { type: String, required: true },
+      birthday: { type: Date, required: true },
+      address: { type: String, required: true },
+      nif: { type: Number, required: true, unique: true },
+     },
     guests_no: { type: Number, required: true },
     extras: [{ type: String }],
     reserved: {
