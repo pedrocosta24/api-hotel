@@ -5,7 +5,7 @@ export interface IUser {
   birthday: Date,
   address: string,
   nif: number,
-  user_type: [
+  role: [
     "GUEST" | "ADMIN"
   ]
 }

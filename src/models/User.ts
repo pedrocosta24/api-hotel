@@ -7,7 +7,7 @@ let UserSchema = new Schema({
   birthday: { type: Date, required: true },
   address: { type: String, required: true },
   nif: { type: Number, required: true, unique: true },
-  user_type: ["GUEST", "ADMIN"]
+  role: { type: String, required: true, default: "GUEST" }
 })
 
 let UserModel = model('Users', UserSchema)

@@ -1,7 +1,17 @@
-import express, { Request, Response } from "express";
+import express from "express";
+import RoomsController from "@controllers/RoomsController";
+import UsersController from "@controllers/UsersController";
+
 
 export const router = express();
 
-router.get('/', (req: Request, res: Response) => {
-  res.send("Hello world")
-})
+
+const usersController = new UsersController();
+
+router.post("/users", usersController.create)
+// router.get("/users", usersController.findAll)
+
+const roomsController = new RoomsController();
+
+router.post("/rooms", usersController.create)
+// router.get("/rooms", usersController.findAll)
