@@ -6,7 +6,7 @@ interface IRoom {
   characteristics?: String[];
   price_night: number;
   reserved: IReserved[];
-  images?: string;
+  images?: String[];
 }
 
 interface IReserved {

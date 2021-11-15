@@ -22,7 +22,7 @@ let UserSchema = new Schema<IUser>({
         capacity: { type: Number, required: true },
         characteristics: [{ type: String, required: true }],
         price_night: { type: Number, required: true },
-        images: { type: String, required: true },
+        images: [{ type: String, required: true }],
       },
       no_guests: { type: Number, required: true },
       extras: [{ type: String }],

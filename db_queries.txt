@@ -1,0 +1,60 @@
+POST de users
+{
+    "name": "Diogo",
+    "email": "gmail@diogo.com",
+    "phone_number": "910000000",
+    "address": {
+        "street": "Rua das ruas",
+        "city": "Paços de Ferreira",
+        "postal_code": "4595-045",
+        "country": "Portugal"
+    },
+    "birthday": "1636730759347",
+    "nif": 284732927,
+    "bookings": [{
+        "room": {
+            "room_no": "56",
+            "type": "single",
+            "no_beds": "1",
+            "capacity": "1",
+            "characteristics": ["wifi"],
+            "price_night": "70",
+            "reserved": [
+                {
+                    "from": "1636730759347",
+                    "to": "1637004600408"
+                }
+            ],
+            "images": ["asd.png"]
+        },
+        "no_guests": "1",
+        "extras": ["asd"],
+        "observations": "",
+        "reserved": {
+            "from": "1636730759347",
+            "to": "1637004600408"
+        },
+        "no_nights": 3,
+        "final_price": 300
+    }],
+    "password": "dkoawdkdk",
+    "role": "GUEST"
+}
+
+POST de rooms
+{
+    "room_no": "56",
+    "type": "single",
+    "no_beds": "1",
+    "capacity": "1",
+    "characteristics": ["wifi"],
+    "price_night": "70",
+    "reserved": [
+        {
+            "from": "1636730759347",
+            "to": "1637004600408"
+        }
+    ],
+    "images": ["asd.png", "qpweiojq.png"]
+
+}

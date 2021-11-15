@@ -14,7 +14,7 @@ let RoomSchema = new Schema<IRoom>({
       to: { type: Date },
     },
   ],
-  images: { type: String, required: true },
+  images: [{ type: String, required: true }],
 });
 
 export let RoomModel = model("Rooms", RoomSchema);
