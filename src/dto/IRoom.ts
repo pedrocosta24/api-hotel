@@ -1,17 +1,17 @@
-import { IUser } from "./IUser";
-
-export interface IRoom {
+interface IRoom {
   room_no: number;
-  type: ["single" | "double" | "king" | "deluxe"];
+  type: "single" | "double" | "king" | "deluxe";
   no_beds: number;
   capacity: number;
-  characteristics?: String;
+  characteristics?: String[];
   price_night: number;
-  reserved: Reserved[]
+  reserved: IReserved[];
   images?: string;
 }
 
-interface Reserved {
-  from: Date
-  to: Date
+interface IReserved {
+  from: Date;
+  to: Date;
 }
+
+export { IRoom, IReserved };
