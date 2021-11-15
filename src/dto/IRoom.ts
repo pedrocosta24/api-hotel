@@ -7,18 +7,11 @@ export interface IRoom {
   capacity: number;
   characteristics?: String;
   price_night: number;
+  reserved: Reserved[]
   images?: string;
-  bookings: Booking[];
 }
 
-interface Booking {
-  user: IUser;
-  no_guest: number;
-  extras?: string;
-  reserved: {
-    from: Date;
-    to: Date;
-  };
-  no_nights: number;
-  final_price: number;
+interface Reserved {
+  from: Date
+  to: Date
 }
