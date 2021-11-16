@@ -1,6 +1,6 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+import jwt, { verify } from "jsonwebtoken";
 
 import { UserModel as User } from "../models/User";
 
@@ -47,7 +47,7 @@ export default class UsersController {
       user.token = token;
 
       // return new user
-      res.status(201).json(user);
+      res.status(201).json(token);
     } catch (err) {
       console.log(err);
     }
@@ -79,7 +79,7 @@ export default class UsersController {
         user.token = token;
   
         // user
-        res.status(200).json(user);
+        res.status(200).json(token);
       }
       res.status(400).send("Invalid Credentials");
     } catch (err) {
@@ -132,5 +132,18 @@ export default class UsersController {
         res.status(400);
       }
     });
+  }
+
+  verifyToken(req: Request, res: Response, next: NextFunction) {
+    let token = req.headers['x-access-token']
+
+
+    if (!token) {
+      return res.status(401)
+    }
+
+    verify(token, process.env.SECRET, (err, decoded) => {
+      res.status(202).send({ auth: true, decoded })
+    })
   }
 }

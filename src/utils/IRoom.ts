@@ -1,4 +1,4 @@
-interface IRoom {
+export interface IRoom {
   room_no: number;
   type: "single" | "double" | "king" | "deluxe";
   no_beds: number;
@@ -13,5 +13,3 @@ interface IReserved {
   from: Date;
   to: Date;
 }
-
-export { IRoom, IReserved };
