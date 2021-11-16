@@ -10,6 +10,7 @@ export interface IUser {
   bookings?: IBooking[];
   password: string;
   role: "GUEST" | "ADMIN";
+  token: string;
 }
 
 interface IAddress {

@@ -1,5 +1,5 @@
 import { model, Schema } from "mongoose";
-import { IUser } from "../dto/IUser";
+import { IUser } from "../utils/IUser";
 
 let UserSchema = new Schema<IUser>({
   name: { type: String, required: true },
@@ -22,7 +22,7 @@ let UserSchema = new Schema<IUser>({
         capacity: { type: Number, required: true },
         characteristics: [{ type: String, required: true }],
         price_night: { type: Number, required: true },
-        images: [{ type: String, required: true }],
+        images: [{ type: String, required: false }],
       },
       no_guests: { type: Number, required: true },
       extras: [{ type: String }],

@@ -1,17 +1,90 @@
 import { Request, Response } from "express";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+
 import { UserModel as User } from "../models/User";
 
 export default class UsersController {
   async create(req: Request, res: Response) {
-    const { body } = req;
-    const newUser = await new User(body);
+    // Our register logic starts here
+    try {
+      // Get user input
+      const { body } = req;
 
-    newUser
-      .save()
-      .then(() => {
-        res.status(201).json(newUser);
-      })
-      .catch(res.status(400));
+      // Validate user input
+      if (!(body.email && body.password && body.name && body.phone_number)) {
+        res.status(400).send("All input is required");
+      }
+
+      // check if user already exist
+      // Validate if user exist in our database
+      const oldUser = await User.findOne({ email: body.email });
+
+      if (oldUser) {
+        return res.status(409).send("User Already Exist. Please Login");
+      }
+
+      //Encrypt user password
+      const encryptedPassword = await bcrypt.hash(body.password, 10);
+
+      console.log(encryptedPassword);
+
+      // Create user in our database
+
+      body.password = encryptedPassword;
+
+      const user = await User.create(body);
+
+      // Create token
+      const token = jwt.sign(
+        { user_id: user._id, email: body.email },
+        process.env.SECRET,
+        {
+          expiresIn: `${process.env.EXPIRESPASSWORD}`,
+        }
+      );
+      // save user token
+      user.token = token;
+
+      // return new user
+      res.status(201).json(user);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async login(req: Request, res:Response){
+    try {
+      // Get user input
+      const { email, password } = req.body;
+  
+      // Validate user input
+      if (!(email && password)) {
+        res.status(400).send("All input is required");
+      }
+      // Validate if user exist in our database
+      const user = await User.findOne({ email });
+  
+      if (user && (await bcrypt.compare(password, user.password))) {
+        // Create token
+        const token = jwt.sign(
+          { user_id: user._id, email },
+          process.env.SECRET,
+          {
+            expiresIn: `${process.env.EXPIRESPASSWORD}`,
+          }
+        );
+  
+        // save user token
+        user.token = token;
+  
+        // user
+        res.status(200).json(user);
+      }
+      res.status(400).send("Invalid Credentials");
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   async findAll(req: Request, res: Response) {
@@ -51,14 +124,13 @@ export default class UsersController {
     const { id } = req.params;
     const { body } = req;
 
-    User.findByIdAndUpdate(id,body, { new: true }, (err, updatedUser) => {
-        if (updatedUser) {
-          res.status(201);
-          res.json(updatedUser);
-        } else {
-          res.status(400);
-        }
+    User.findByIdAndUpdate(id, body, { new: true }, (err, updatedUser) => {
+      if (updatedUser) {
+        res.status(201);
+        res.json(updatedUser);
+      } else {
+        res.status(400);
       }
-    );
+    });
   }
 }

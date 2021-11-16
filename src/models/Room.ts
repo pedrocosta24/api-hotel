@@ -1,5 +1,5 @@
 import { model, Schema } from "mongoose";
-import { IRoom } from "../dto/IRoom";
+import { IRoom } from "../utils/IRoom";
 
 let RoomSchema = new Schema<IRoom>({
   room_no: { type: Number, required: true },

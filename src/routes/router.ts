@@ -6,7 +6,8 @@ export const router = express();
 
 const usersController = new UsersController();
 
-router.post("/users", usersController.create)
+router.post("/register", usersController.create)
+router.post("/login", usersController.login)
 router.get("/users", usersController.findAll)
 router.get("/users/:id", usersController.findByID)
 router.put("/users/:id", usersController.update)

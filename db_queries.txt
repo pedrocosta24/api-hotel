@@ -1,7 +1,7 @@
 POST de users
 {
     "name": "Diogo",
-    "email": "gmail@diogo.com",
+    "email": "d@s.com",
     "phone_number": "910000000",
     "address": {
         "street": "Rua das ruas",
@@ -10,30 +10,26 @@ POST de users
         "country": "Portugal"
     },
     "birthday": "1636730759347",
-    "nif": 284732927,
+    "nif": 23948373,
     "bookings": [{
         "room": {
-            "room_no": "56",
+            "room_no": "A23",
             "type": "single",
-            "no_beds": "1",
-            "capacity": "1",
-            "characteristics": ["wifi"],
-            "price_night": "70",
-            "reserved": [
-                {
-                    "from": "1636730759347",
-                    "to": "1637004600408"
-                }
-            ],
+            "no_beds": 2,
+            "capacity": 4,
+            "characteristics": ["asd", "dkd"],
+            "price_night": 70,
             "images": ["asd.png"]
         },
-        "no_guests": "1",
+        "no_guests": 1,
         "extras": ["asd"],
-        "observations": "",
-        "reserved": {
-            "from": "1636730759347",
-            "to": "1637004600408"
-        },
+        "observations": "çlml",
+        "reserved": [
+            {
+                "from": "1636730759347",
+                "to": "1637004600408"
+            }
+        ],
         "no_nights": 3,
         "final_price": 300
     }],
