@@ -11,7 +11,9 @@ export default class RoomsController {
       .then(() => {
         res.status(201).json(newRoom);
       })
-      .catch(res.status(400));
+      .catch((err) => {
+        res.status(400);
+      });
   }
 
   async findAll(req: Request, res: Response) {
@@ -52,13 +54,12 @@ export default class RoomsController {
     const { body } = req;
 
     Room.findByIdAndUpdate(id, body, { new: true }, (err, updatedRoom) => {
-        if (updatedRoom) {
-          res.status(201);
-          res.json(updatedRoom);
-        } else {
-          res.status(400);
-        }
+      if (updatedRoom) {
+        res.status(201);
+        res.json(updatedRoom);
+      } else {
+        res.status(400);
       }
-    );
+    });
   }
 }

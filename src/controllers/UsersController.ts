@@ -33,7 +33,7 @@ export default class UsersController {
 
       body.password = encryptedPassword;
 
-      const user = await User.create(body);
+      let user = await User.create(body);
 
       // Create token
       const token = jwt.sign(
@@ -44,7 +44,7 @@ export default class UsersController {
         }
       );
       // save user token
-      user.token = token;
+      //user.token = token;
 
       // return new user
       res.status(201).json(token);
@@ -53,18 +53,18 @@ export default class UsersController {
     }
   }
 
-  async login(req: Request, res:Response){
+  async login(req: Request, res: Response) {
     try {
       // Get user input
       const { email, password } = req.body;
-  
+
       // Validate user input
       if (!(email && password)) {
         res.status(400).send("All input is required");
       }
       // Validate if user exist in our database
       const user = await User.findOne({ email });
-  
+
       if (user && (await bcrypt.compare(password, user.password))) {
         // Create token
         const token = jwt.sign(
@@ -74,10 +74,10 @@ export default class UsersController {
             expiresIn: `${process.env.EXPIRESPASSWORD}`,
           }
         );
-  
+
         // save user token
         user.token = token;
-  
+
         // user
         res.status(200).json(token);
       }
@@ -88,6 +88,10 @@ export default class UsersController {
   }
 
   async findAll(req: Request, res: Response) {
+    const { query } = req;
+
+    if (query) console.log(query);
+
     User.find({}, (err, users) => {
       if (users) {
         res.status(200).json(users);
@@ -135,15 +139,14 @@ export default class UsersController {
   }
 
   verifyToken(req: Request, res: Response, next: NextFunction) {
-    let token = req.headers['x-access-token']
-
+    let token = req.headers["x-access-token"].toString();
 
     if (!token) {
-      return res.status(401)
+      return res.status(401);
     }
 
     verify(token, process.env.SECRET, (err, decoded) => {
-      res.status(202).send({ auth: true, decoded })
-    })
+      res.status(202).send({ auth: true, decoded });
+    });
   }
 }
