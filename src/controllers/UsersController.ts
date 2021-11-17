@@ -106,7 +106,7 @@ export default class UsersController {
   async findByID(req: Request, res: Response) {
     const { id } = req.params;
 
-    User.find({ _id: id }, (err, user) => {
+    User.findById(id, (err, user) => {
       if (user) {
         res.status(200).json(user);
       } else {
@@ -116,10 +116,9 @@ export default class UsersController {
   }
 
   async getBookingsFromUser(req: Request, res: Response) {
-    const { page = 1 }: any = req.query;
     const { id } = req.params;
 
-    User.find({ _id: id }, "bookings", (err, bookings) => {
+    User.findById(id, "bookings", (err, bookings) => {
       if (bookings) {
         res.status(200).json(bookings);
       } else {
