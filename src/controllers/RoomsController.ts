@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { RoomModel as Room } from "../models/Room";
 
+const ITEMS_PER_PAGE = 1;
+
 export default class RoomsController {
   async create(req: Request, res: Response) {
     const { body } = req;
@@ -17,13 +19,18 @@ export default class RoomsController {
   }
 
   async findAll(req: Request, res: Response) {
+    const { page = 1 }: any = req.query;
+
     Room.find({}, (err, rooms) => {
       if (rooms) {
         res.status(200).json(rooms);
       } else {
         res.status(400);
       }
-    });
+    })
+      .sort([[req.query.orderBy, req.query.direction]])
+      .limit(ITEMS_PER_PAGE)
+      .skip((page - 1) * ITEMS_PER_PAGE);
   }
 
   async findByID(req: Request, res: Response) {
@@ -40,6 +47,7 @@ export default class RoomsController {
 
   async delete(req: Request, res: Response) {
     const { id } = req.params;
+
     Room.findByIdAndRemove(id, (err, deletedRoom) => {
       if (deletedRoom) {
         res.status(200).json("Room deleted successfully");

@@ -4,12 +4,13 @@ import jwt, { verify } from "jsonwebtoken";
 
 import { UserModel as User } from "../models/User";
 
+const ITEMS_PER_PAGE = 1;
 export default class UsersController {
   async create(req: Request, res: Response) {
     // Our register logic starts here
     try {
       // Get user input
-      const { body } = req;
+      let { body } = req;
 
       // Validate user input
       if (!(body.email && body.password && body.name && body.phone_number)) {
@@ -88,9 +89,7 @@ export default class UsersController {
   }
 
   async findAll(req: Request, res: Response) {
-    const { query } = req;
-
-    if (query) console.log(query);
+    const { page = 1 }: any = req.query;
 
     User.find({}, (err, users) => {
       if (users) {
@@ -98,7 +97,10 @@ export default class UsersController {
       } else {
         res.status(400);
       }
-    });
+    })
+      .sort([[req.query.orderBy, req.query.direction]])
+      .limit(ITEMS_PER_PAGE)
+      .skip((page - 1) * ITEMS_PER_PAGE);
   }
 
   async findByID(req: Request, res: Response) {
@@ -107,6 +109,19 @@ export default class UsersController {
     User.find({ _id: id }, (err, user) => {
       if (user) {
         res.status(200).json(user);
+      } else {
+        res.status(400);
+      }
+    });
+  }
+
+  async getBookingsFromUser(req: Request, res: Response) {
+    const { page = 1 }: any = req.query;
+    const { id } = req.params;
+
+    User.find({ _id: id }, "bookings", (err, bookings) => {
+      if (bookings) {
+        res.status(200).json(bookings);
       } else {
         res.status(400);
       }
@@ -136,6 +151,24 @@ export default class UsersController {
         res.status(400);
       }
     });
+  }
+
+  async addBookingToUser(req: Request, res: Response) {
+    const { id } = req.params;
+    const newBooking = req.body;
+
+    User.findByIdAndUpdate(
+      id,
+      { $push: { bookings: newBooking } },
+      { new: true },
+      (err, updatedBookings) => {
+        if (updatedBookings) {
+          res.status(201).json(updatedBookings);
+        } else {
+          res.status(400);
+        }
+      }
+    );
   }
 
   verifyToken(req: Request, res: Response, next: NextFunction) {

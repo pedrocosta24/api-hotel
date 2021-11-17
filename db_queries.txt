@@ -37,6 +37,23 @@ POST de users
     "role": "GUEST"
 }
 
+{
+    "name": "Pedro",
+    "email": "dasd@s.com",
+    "phone_number": "910000001",
+    "address": {
+        "street": "Rua das ruas",
+        "city": "Paços de Ferreira",
+        "postal_code": "4595-045",
+        "country": "Portugal"
+    },
+    "birthday": "1636730759347",
+    "nif": 2391237323,
+    "bookings": [],
+    "password": "asd",
+    "role": "GUEST"
+}
+
 POST de rooms
 {
     "room_no": "56",
