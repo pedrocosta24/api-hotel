@@ -3,7 +3,14 @@ export interface IRoom {
   type: "single" | "double" | "king" | "deluxe";
   no_beds: number;
   capacity: number;
-  characteristics?: String[];
+  ammenities: {
+    wifi: boolean;
+    tv: boolean;
+    crib: boolean;
+    airConditioning: boolean;
+    iron: boolean;
+    smokeAlarm: boolean;
+  };
   price_night: number;
   reserved: IReserved[];
   images?: String[];

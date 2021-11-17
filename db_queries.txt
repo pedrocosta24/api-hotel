@@ -17,7 +17,14 @@ POST de users
             "type": "single",
             "no_beds": 2,
             "capacity": 4,
-            "characteristics": ["asd", "dkd"],
+            "ammenities": {
+                "wifi": false,
+                "tv": false,
+                "crib": false,
+                "airConditioning": false,
+                "iron": false,
+                "smokeAlarm": false
+            },
             "price_night": 70,
             "images": ["asd.png"]
         },
@@ -60,7 +67,14 @@ POST de rooms
     "type": "single",
     "no_beds": "1",
     "capacity": "1",
-    "characteristics": ["wifi"],
+    "ammenities": {
+        "wifi": false,
+        "tv": false,
+        "crib": false,
+        "airConditioning": false,
+        "iron": false,
+        "smokeAlarm": false,
+    },
     "price_night": "70",
     "reserved": [
         {
@@ -70,4 +84,13 @@ POST de rooms
     ],
     "images": ["asd.png", "qpweiojq.png"]
 
+}
+
+{
+    "wifi": false,
+    "tv": false,
+    "crib": false,
+    "airConditioning": false,
+    "iron": false,
+    "smokeAlarm": false,
 }
