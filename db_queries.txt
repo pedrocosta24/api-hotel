@@ -64,7 +64,7 @@ POST de users
     "nif": 2391237323,
     "bookings": [],
     "password": "asd",
-    "role": "GUEST"
+    "role": "ADMIN"
 }
 
 POST de rooms

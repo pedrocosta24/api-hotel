@@ -6,6 +6,8 @@ const router = express.Router();
 const usersController = new UsersController();
 const roomsController = new RoomsController();
 
+router.use(usersController.verifyToken);
+
 router.get("/users", usersController.findAll); // Get a list of all users
 
 router
