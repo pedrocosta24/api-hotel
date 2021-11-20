@@ -16,7 +16,7 @@ let UserSchema = new Schema<IUser>({
   bookings: [
     {
       room: {
-        room_no: { type: String, required: true },
+        room_no: { type: Number, required: true },
         type: { type: String, enum: ["single", "double", "king", "deluxe"] },
         no_beds: { type: Number, required: true },
         capacity: { type: Number, required: true },

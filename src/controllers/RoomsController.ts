@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { RoomModel as Room } from "../models/Room";
 
-const ITEMS_PER_PAGE = 1;
+const ITEMS_PER_PAGE = 10;
 
 export default class RoomsController {
   async create(req: Request, res: Response) {
@@ -37,6 +37,18 @@ export default class RoomsController {
     const { id } = req.params;
 
     Room.find({ _id: id }, (err, room) => {
+      if (room) {
+        res.status(200).json(room);
+      } else {
+        res.status(400);
+      }
+    });
+  }
+
+  async findByRoomNo(req: Request, res: Response) {
+    const { number }: any = req.params;
+
+    Room.find({ room_no: number }, (err, room) => {
       if (room) {
         res.status(200).json(room);
       } else {

@@ -13,10 +13,10 @@ POST de users
     "nif": 23948373,
     "bookings": [{
         "room": {
-            "room_no": "A23",
+            "room_no": 24,
             "type": "single",
-            "no_beds": 2,
-            "capacity": 4,
+            "no_beds": "1",
+            "capacity": "1",
             "ammenities": {
                 "wifi": false,
                 "tv": false,
@@ -25,8 +25,14 @@ POST de users
                 "iron": false,
                 "smokeAlarm": false
             },
-            "price_night": 70,
-            "images": ["asd.png"]
+            "price_night": "70",
+            "reserved": [
+                {
+                    "from": "1636730759347",
+                    "to": "1637004600408"
+                }
+            ],
+            "images": ["asd.png", "qpweiojq.png"]
         },
         "no_guests": 1,
         "extras": ["asd"],
@@ -63,7 +69,7 @@ POST de users
 
 POST de rooms
 {
-    "room_no": "56",
+    "room_no": 24,
     "type": "single",
     "no_beds": "1",
     "capacity": "1",
@@ -73,7 +79,7 @@ POST de rooms
         "crib": false,
         "airConditioning": false,
         "iron": false,
-        "smokeAlarm": false,
+        "smokeAlarm": false
     },
     "price_night": "70",
     "reserved": [
@@ -83,14 +89,4 @@ POST de rooms
         }
     ],
     "images": ["asd.png", "qpweiojq.png"]
-
-}
-
-{
-    "wifi": false,
-    "tv": false,
-    "crib": false,
-    "airConditioning": false,
-    "iron": false,
-    "smokeAlarm": false,
 }

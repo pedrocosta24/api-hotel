@@ -1,10 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt, { verify } from "jsonwebtoken";
+import { UserModel as User } from "@models/User";
 
-import { UserModel as User } from "../models/User";
-
-const ITEMS_PER_PAGE = 1;
+const ITEMS_PER_PAGE = 10;
 export default class UsersController {
   async create(req: Request, res: Response) {
     // Our register logic starts here
@@ -27,8 +26,6 @@ export default class UsersController {
 
       //Encrypt user password
       const encryptedPassword = await bcrypt.hash(body.password, 10);
-
-      console.log(encryptedPassword);
 
       // Create user in our database
 
@@ -106,7 +103,7 @@ export default class UsersController {
   async findByID(req: Request, res: Response) {
     const { id } = req.params;
 
-    User.findById(id, (err, user) => {
+    User.findById(id, (err: Error, user: any) => {
       if (user) {
         res.status(200).json(user);
       } else {
@@ -118,7 +115,7 @@ export default class UsersController {
   async getBookingsFromUser(req: Request, res: Response) {
     const { id } = req.params;
 
-    User.findById(id, "bookings", (err, bookings) => {
+    User.findById(id, "bookings", (err: Error, bookings: any) => {
       if (bookings) {
         res.status(200).json(bookings);
       } else {
@@ -129,7 +126,7 @@ export default class UsersController {
 
   async delete(req: Request, res: Response) {
     const { id } = req.params;
-    User.findByIdAndRemove(id, (err, deletedUser) => {
+    User.findByIdAndRemove(id, (err: Error, deletedUser: any) => {
       if (deletedUser) {
         res.status(200).json("User deleted successfully");
       } else {
@@ -179,6 +176,28 @@ export default class UsersController {
 
     verify(token, process.env.SECRET, (err, decoded) => {
       res.status(202).send({ auth: true, decoded });
+    });
+  }
+
+  async getRoomsFromBookingsOfUser(req: Request, res: Response) {
+    const { id } = req.params;
+
+    User.findById(id, "bookings.room", (err: Error, rooms: any) => {
+      if (rooms) {
+        res.status(200).json(rooms);
+      } else {
+        res.status(400);
+      }
+    });
+  }
+
+  async getAllRoomsFromBookings(req: Request, res: Response) {
+    User.distinct("bookings.room", (err: Error, rooms: any) => {
+      if (rooms) {
+        res.status(200).send(rooms);
+      } else {
+        res.status(400);
+      }
     });
   }
 }
