@@ -30,8 +30,8 @@ router.get("/users/bookings/rooms", usersController.getAllRoomsFromBookings); //
 
 router
   .route("/rooms")
-  .post(roomsController.create) // Create a room
-  .get(roomsController.findAll); // Get all rooms
+  .get(roomsController.findAll) // Get all rooms
+  .post(roomsController.create); // Create a room
 
 router
   .route("/rooms/:id")

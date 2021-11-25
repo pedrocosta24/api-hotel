@@ -7,5 +7,5 @@ import publicRouter from "./publicRoutes";
 export const router = express();
 
 router.use("/auth", authRouter);
-
+router.use("/", publicRouter);
 router.use("/admin", adminRouter);
