@@ -4,7 +4,6 @@ import nodemailer from 'nodemailer'
 import authRouter from "./authRoutes";
 import adminRouter from "./adminRoutes";
 import publicRouter from "./publicRoutes";
-import { configMail } from "src/utils/emailData";
 
 export const router = express();
 
@@ -21,24 +20,23 @@ router.post("/reset", function (req, res, next) {
   var transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-      user: configMail.mailUser,
-      pass: configMail.mailPass,
+      user: process.env.MAIL_USER,
+      pass: process.env.MAIL_PASS,
     },
   });
 
   var mailOptions = {
-    from: configMail.mailFrom,
+    from: process.env.MAIL_FROM,
     to: data.to,
     subject: data.subject,
-    text: data.texts
+    text: data.text
   };
 
   transporter.sendMail(mailOptions, function (error, info) {
     if (error) {
       console.log(error);
     } else {
-      console.log("Email enviado: " + info.response);
-      res.send("<b>Email enviado</b> <br>" + info.response);
+      res.json("E-mail sent successfully");
     }
   });
 });
