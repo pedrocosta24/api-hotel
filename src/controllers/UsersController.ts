@@ -24,6 +24,7 @@ export default class UsersController {
       const encryptedPassword = await bcrypt.hash(body.password, 10);
 
       body.password = encryptedPassword;
+      let user = await User.create(body)
 
       res.status(201).send("User created");
     } catch (err) {
