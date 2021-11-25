@@ -21,17 +21,20 @@ export default class SendEmailController {
       if (!token) {
         token = await new TokenModel({
           userId: user._id,
-          // token: crypto.randomBytes(32).toString("hex"),
-          token: "asdasd",
+          token: Math.random(),
         }).save();
       }
 
       const link = `http://localhost:3333/auth/password-reset/${user._id}/${token.token}`;
-      await sendEmail(user.email, "Password reset", link);
+      await sendEmail(
+        user.email,
+        "Password reset - Golden Skin Hotel",
+        "Click to reset your password " + link
+      );
 
       res.send("password reset link sent to your email account");
     } catch (error) {
-      res.send("An error occured");
+      res.send("An error occurred");
       console.log(error);
     }
   }
