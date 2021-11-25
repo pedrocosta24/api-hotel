@@ -1,5 +1,5 @@
 import express from "express";
-import nodemailer from 'nodemailer'
+import nodemailer from "nodemailer";
 
 import authRouter from "./authRoutes";
 import adminRouter from "./adminRoutes";
@@ -8,10 +8,10 @@ import publicRouter from "./publicRoutes";
 export const router = express();
 
 router.use("/auth", authRouter);
-
+router.use("/", publicRouter);
 router.use("/admin", adminRouter);
 
-// Teste 
+// Teste
 
 router.post("/reset", function (req, res, next) {
   const data = req.body;
@@ -29,7 +29,7 @@ router.post("/reset", function (req, res, next) {
     from: process.env.MAIL_FROM,
     to: data.to,
     subject: data.subject,
-    text: data.text
+    text: data.text,
   };
 
   transporter.sendMail(mailOptions, function (error, info) {
