@@ -2,11 +2,14 @@ import { NextFunction, Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt, { verify } from "jsonwebtoken";
 import { UserModel as User } from "@models/User";
+import { RoomModel as Room } from "@models/Room";
+import RoomsController from "./RoomsController";
 
 interface RequestWithToken extends Request {
   decoded: any;
 }
 
+const roomsController = new RoomsController();
 const ITEMS_PER_PAGE = 10;
 export default class UsersController {
   async create(req: Request, res: Response) {
@@ -24,7 +27,7 @@ export default class UsersController {
       const encryptedPassword = await bcrypt.hash(body.password, 10);
 
       body.password = encryptedPassword;
-      let user = await User.create(body)
+      let user = await User.create(body);
 
       res.status(201).send("User created");
     } catch (err) {
@@ -180,18 +183,25 @@ export default class UsersController {
       const { id } = req.params;
       const newBooking = req.body;
 
-      User.findByIdAndUpdate(
-        id,
-        { $push: { bookings: newBooking } },
-        { new: true },
-        (err, updatedBookings) => {
-          if (updatedBookings) {
-            res.status(201).json(updatedBookings);
-          } else {
-            res.status(400);
-          }
+      Room.exists({ room_no: newBooking.room.room_no }, (err, roomExists) => {
+        if (roomExists) {
+          User.findByIdAndUpdate(
+            id,
+            { $push: { bookings: newBooking } },
+            { new: true },
+            (err, updatedBookings) => {
+              roomsController.addResDatesToRoom(req, res);
+              if (updatedBookings) {
+                res.status(201).json(updatedBookings);
+              } else {
+                res.sendStatus(400);
+              }
+            }
+          );
+        } else {
+          res.sendStatus(400);
         }
-      );
+      });
     } catch (err) {
       console.error(err);
     }

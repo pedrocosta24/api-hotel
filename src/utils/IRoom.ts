@@ -3,7 +3,7 @@ export interface IRoom {
   type: "single" | "double" | "king" | "deluxe";
   no_beds: number;
   capacity: number;
-  ammenities: {
+  amenities: {
     wifi: boolean;
     tv: boolean;
     crib: boolean;

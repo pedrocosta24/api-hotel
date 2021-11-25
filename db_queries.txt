@@ -52,7 +52,7 @@ POST de users
 
 {
     "name": "Pedro",
-    "email": "dasd@s.com",
+    "email": "pedrocosta2406@pm.me",
     "phone_number": "910000001",
     "address": {
         "street": "Rua das ruas",
@@ -63,7 +63,7 @@ POST de users
     "birthday": "1636730759347",
     "nif": 2391237323,
     "bookings": [],
-    "password": "asd",
+    "password": "pedro123",
     "role": "ADMIN"
 }
 
@@ -73,7 +73,7 @@ POST de rooms
     "type": "single",
     "no_beds": "1",
     "capacity": "1",
-    "ammenities": {
+    "amenities": {
         "wifi": false,
         "tv": false,
         "crib": false,

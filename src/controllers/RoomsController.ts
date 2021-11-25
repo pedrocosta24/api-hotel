@@ -106,4 +106,19 @@ export default class RoomsController {
       console.error(err);
     }
   }
+
+  async addResDatesToRoom(req: Request, res: Response) {
+    try {
+      let { body } = req;
+      Room.findOneAndUpdate(
+        { room_no: body.room.room_no },
+        { $push: { reserved: body.reserved } },
+        {
+          new: true,
+        }
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  }
 }

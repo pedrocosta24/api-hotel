@@ -2,11 +2,11 @@ import { model, Schema } from "mongoose";
 import { IRoom } from "../utils/IRoom";
 
 let RoomSchema = new Schema<IRoom>({
-  room_no: { type: Number, required: true },
+  room_no: { type: Number, required: true, unique: true },
   type: { type: String, enum: ["single", "double", "king", "deluxe"] },
   no_beds: { type: Number, required: true },
   capacity: { type: Number, required: true },
-  ammenities: {
+  amenities: {
     wifi: { type: Boolean, required: true, default: false },
     tv: { type: Boolean, required: true, default: false },
     crib: { type: Boolean, required: true, default: false },
