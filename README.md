@@ -78,7 +78,7 @@
 
 - **/rooms/number/:number** - _Post_
   - Nesta rota é possivel obter um quarto através do seu número:
-  ```json
+  ```
     /rooms/number/24
   ```
   <br>
@@ -93,7 +93,7 @@
 
   - Exemplo de filtragem de users via query params:
 
-  ```json
+  ```
     /users?orderBy=name&direction=desc
     /users?page=2
   ```
@@ -163,7 +163,7 @@
 
 - **/admin/rooms/:id** - _Get, Put, Delete_
   - Exemplo de filtragem de quartos via query params:
-  ```json
+  ```
     /rooms/:id?orderBy=room_no&direction=desc
     /rooms/:id?page=2
   ```
