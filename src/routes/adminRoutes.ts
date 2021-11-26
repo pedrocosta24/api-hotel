@@ -39,6 +39,6 @@ router
   .put(roomsController.update) // Update a room by ID
   .delete(roomsController.delete); // Delete a room by ID
 
-router.get("/rooms/number/:number", roomsController.findByRoomNo);
+router.get("/rooms/number/:number", roomsController.findByRoomNo); // Get room by room_no
 
 export default router;

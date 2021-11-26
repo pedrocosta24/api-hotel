@@ -9,9 +9,12 @@ const sendEmailController = new SendEmailController();
 
 router.post("/register", usersController.create);
 router.post("/login", usersController.login);
-router.post("/me", usersController.verifyToken);
+router.get("/me", usersController.me);
 
-router.post("/password-reset", sendEmailController.requestReset)
-router.post("/password-reset/:userId/:token", sendEmailController.resetPassword)
+router.post("/password-reset", sendEmailController.requestReset);
+router.post(
+  "/password-reset/:userId/:token",
+  sendEmailController.resetPassword
+);
 
 export default router;

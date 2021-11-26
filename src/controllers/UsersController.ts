@@ -1,15 +1,14 @@
 import { NextFunction, Request, Response } from "express";
 import bcrypt from "bcryptjs";
-import jwt, { verify } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import { UserModel as User } from "@models/User";
 import { RoomModel as Room } from "@models/Room";
-import RoomsController from "./RoomsController";
+import { isAfter, parseISO, areIntervalsOverlapping } from "date-fns";
 
 interface RequestWithToken extends Request {
   decoded: any;
 }
 
-const roomsController = new RoomsController();
 const ITEMS_PER_PAGE = 10;
 export default class UsersController {
   async create(req: Request, res: Response) {
@@ -91,6 +90,18 @@ export default class UsersController {
         }
 
         next();
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async me(req: Request, res: Response) {
+    try {
+      let token = req.headers["x-access-token"].toString();
+
+      jwt.verify(token, process.env.SECRET, (err, decoded) => {
+        res.status(200).send(decoded);
       });
     } catch (err) {
       console.error(err);
@@ -186,46 +197,70 @@ export default class UsersController {
       const { id } = req.params;
       const newBooking = req.body;
 
-      Room.exists(
-        { room_no: newBooking.room.room_no },
-        async (err, roomExists) => {
-          if (roomExists) {
-            let newRoom = await Room.findOneAndUpdate(
-              { room_no: newBooking.room.room_no },
-              { $push: { reserved: newBooking.reserved } },
-              { new: true }
-            );
+      Room.findOne({ room_no: newBooking.room.room_no }, async (err, room) => {
+        if (room) {
+          if (
+            isAfter(
+              parseISO(newBooking.reserved[0].to),
+              parseISO(newBooking.reserved[0].from)
+            )
+          ) {
+            let validDate = true;
 
-            let updatedRoom = {
-              room_no: newRoom.room_no,
-              type: newRoom.type,
-              no_beds: newRoom.no_beds,
-              capacity: newRoom.capacity,
-              amenities: newRoom.amenities,
-              price_night: newRoom.price_night,
-              reserved: newRoom.reserved,
-              images: newRoom.images,
-            };
-
-            newBooking.room = updatedRoom;
-
-            User.findByIdAndUpdate(
-              id,
-              { $push: { bookings: newBooking } },
-              { new: true },
-              (err, updatedBookings) => {
-                if (updatedBookings) {
-                  res.status(201).json(updatedBookings);
-                } else {
-                  res.sendStatus(400);
-                }
+            for (const reserved of room.reserved) {
+              if (
+                areIntervalsOverlapping(
+                  { start: reserved.from, end: reserved.to },
+                  {
+                    start: parseISO(newBooking.reserved[0].from),
+                    end: parseISO(newBooking.reserved[0].to),
+                  }
+                )
+              ) {
+                validDate = false;
               }
-            );
+            }
+
+            if (validDate) {
+              let newRoom = await Room.findOneAndUpdate(
+                { room_no: newBooking.room.room_no },
+                { $push: { reserved: newBooking.reserved } },
+                { new: true }
+              );
+
+              newBooking.room = {
+                room_no: newRoom.room_no,
+                type: newRoom.type,
+                no_beds: newRoom.no_beds,
+                capacity: newRoom.capacity,
+                amenities: newRoom.amenities,
+                price_night: newRoom.price_night,
+                reserved: newRoom.reserved,
+                images: newRoom.images,
+              };
+
+              User.findByIdAndUpdate(
+                id,
+                { $push: { bookings: newBooking } },
+                { new: true },
+                (err, updatedBookings) => {
+                  if (updatedBookings) {
+                    res.status(201).json(updatedBookings);
+                  } else {
+                    res.status(400).send("Error adding booking");
+                  }
+                }
+              );
+            } else {
+              res.status(400).send("Date error");
+            }
           } else {
-            res.sendStatus(400);
+            res.status(400).send("Date error");
           }
+        } else {
+          res.sendStatus(400);
         }
-      );
+      });
     } catch (err) {
       console.error(err);
     }
