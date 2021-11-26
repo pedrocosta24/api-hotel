@@ -26,7 +26,7 @@ router.get(
   usersController.getRoomsFromBookingsOfUser
 ); // Get all rooms from all bookings of a user
 
-router.get("/users/bookings/rooms", usersController.getAllRoomsFromBookings); // Gell all rooms from all bookings
+router.get("/users/bookings/rooms", usersController.getAllRoomsFromBookings); // Get all rooms from all bookings
 
 router
   .route("/rooms")

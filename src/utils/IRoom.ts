@@ -16,7 +16,7 @@ export interface IRoom {
   images?: String[];
 }
 
-interface IReserved {
+export interface IReserved {
   from: Date;
   to: Date;
 }

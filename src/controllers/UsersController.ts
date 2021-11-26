@@ -27,9 +27,14 @@ export default class UsersController {
       const encryptedPassword = await bcrypt.hash(body.password, 10);
 
       body.password = encryptedPassword;
-      let user = await User.create(body);
 
-      res.status(201).send("User created");
+      User.create(body, (err: Error, newUser: any) => {
+        if (newUser) {
+          res.status(201).json(newUser);
+        } else {
+          res.sendStatus(400);
+        }
+      });
     } catch (err) {
       console.error(err);
     }
@@ -43,11 +48,9 @@ export default class UsersController {
         res.status(400).send("All input is required");
       }
 
-      // Validate if user exists in our database
       const user = await User.findOne({ email });
 
       if (user && (await bcrypt.compare(password, user.password))) {
-        // Create token
         const token = jwt.sign(
           { user_id: user._id, email, role: user.role },
           process.env.SECRET,
@@ -183,25 +186,46 @@ export default class UsersController {
       const { id } = req.params;
       const newBooking = req.body;
 
-      Room.exists({ room_no: newBooking.room.room_no }, (err, roomExists) => {
-        if (roomExists) {
-          User.findByIdAndUpdate(
-            id,
-            { $push: { bookings: newBooking } },
-            { new: true },
-            (err, updatedBookings) => {
-              roomsController.addResDatesToRoom(req, res);
-              if (updatedBookings) {
-                res.status(201).json(updatedBookings);
-              } else {
-                res.sendStatus(400);
+      Room.exists(
+        { room_no: newBooking.room.room_no },
+        async (err, roomExists) => {
+          if (roomExists) {
+            let newRoom = await Room.findOneAndUpdate(
+              { room_no: newBooking.room.room_no },
+              { $push: { reserved: newBooking.reserved } },
+              { new: true }
+            );
+
+            let updatedRoom = {
+              room_no: newRoom.room_no,
+              type: newRoom.type,
+              no_beds: newRoom.no_beds,
+              capacity: newRoom.capacity,
+              amenities: newRoom.amenities,
+              price_night: newRoom.price_night,
+              reserved: newRoom.reserved,
+              images: newRoom.images,
+            };
+
+            newBooking.room = updatedRoom;
+
+            User.findByIdAndUpdate(
+              id,
+              { $push: { bookings: newBooking } },
+              { new: true },
+              (err, updatedBookings) => {
+                if (updatedBookings) {
+                  res.status(201).json(updatedBookings);
+                } else {
+                  res.sendStatus(400);
+                }
               }
-            }
-          );
-        } else {
-          res.sendStatus(400);
+            );
+          } else {
+            res.sendStatus(400);
+          }
         }
-      });
+      );
     } catch (err) {
       console.error(err);
     }

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { RoomModel as Room } from "../models/Room";
+import { RoomModel as Room } from "@models/Room";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -7,16 +7,14 @@ export default class RoomsController {
   async create(req: Request, res: Response) {
     try {
       const { body } = req;
-      const newRoom = await new Room(body);
 
-      newRoom
-        .save()
-        .then(() => {
+      Room.create(body, (err, newRoom) => {
+        if (newRoom) {
           res.status(201).json(newRoom);
-        })
-        .catch((err) => {
-          res.status(400);
-        });
+        } else {
+          res.sendStatus(400);
+        }
+      });
     } catch (err) {
       console.error(err);
     }
@@ -102,21 +100,6 @@ export default class RoomsController {
           res.status(400);
         }
       });
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  async addResDatesToRoom(req: Request, res: Response) {
-    try {
-      let { body } = req;
-      Room.findOneAndUpdate(
-        { room_no: body.room.room_no },
-        { $push: { reserved: body.reserved } },
-        {
-          new: true,
-        }
-      );
     } catch (err) {
       console.error(err);
     }
