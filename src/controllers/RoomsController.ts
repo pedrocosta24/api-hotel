@@ -23,8 +23,9 @@ export default class RoomsController {
   async findAll(req: Request, res: Response) {
     try {
       const { page = 1 }: any = req.query;
+      const { body } = req && req;
 
-      Room.find({}, (err, rooms) => {
+      Room.find(body, (err, rooms) => {
         if (rooms) {
           res.status(200).json(rooms);
         } else {
