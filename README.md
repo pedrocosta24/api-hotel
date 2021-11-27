@@ -91,7 +91,7 @@
 
 - **/admin/users** - _Get_
 
-  - Exemplo de filtragem de users via query params:
+  - Exemplo de ordenação e paginação de users via query params:
 
   ```
     /users?orderBy=name&direction=desc
@@ -162,7 +162,7 @@
   <br>
 
 - **/admin/rooms/:id** - _Get, Put, Delete_
-  - Exemplo de filtragem de quartos via query params:
+  - Exemplo de ordenação e paginação de quartos via query params:
   ```
     /rooms/:id?orderBy=room_no&direction=desc
     /rooms/:id?page=2
@@ -172,5 +172,25 @@
 ---
 
 <br>
+
+### Rotas de Hóspedes
+
+<br>
+
+- **/me/rooms** - _Get_
+- **/me/bookings** - _Get_
+
+  - Estas rotas servem para os hóspedes listarem as suas reservas ou todos os quartos que constam nas mesmas.
+
+  - Exemplo de ordenação e paginação via query params:
+
+  ```
+    /me/rooms?orderBy=name&direction=desc
+    /me/bookings?page=2
+  ```
+
+<br>
+
+---
 
 **Work done by Diogo Martins & Pedro Costa 🚀**

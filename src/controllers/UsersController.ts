@@ -237,6 +237,7 @@ export default class UsersController {
   async myBookings(req: RequestWithToken, res: Response) {
     try {
       let token = req.decoded;
+      const { page = 1 }: any = req.query;
 
       User.findById(
         token.decoded.user_id,
@@ -248,7 +249,10 @@ export default class UsersController {
             res.status(400);
           }
         }
-      );
+      )
+        .sort([[req.query.orderBy, req.query.direction]])
+        .limit(ITEMS_PER_PAGE)
+        .skip((page - 1) * ITEMS_PER_PAGE);
     } catch (err) {
       console.error(err);
     }
@@ -257,6 +261,7 @@ export default class UsersController {
   async myRooms(req: RequestWithToken, res: Response) {
     try {
       let token = req.decoded;
+      const { page = 1 }: any = req.query;
 
       User.distinct(
         "bookings.room",
@@ -268,7 +273,10 @@ export default class UsersController {
             res.status(400);
           }
         }
-      );
+      )
+        .sort([[req.query.orderBy, req.query.direction]])
+        .limit(ITEMS_PER_PAGE)
+        .skip((page - 1) * ITEMS_PER_PAGE);
     } catch (err) {
       console.error(err);
     }
