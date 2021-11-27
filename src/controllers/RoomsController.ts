@@ -1,15 +1,15 @@
-import { ErrorRequestHandler, Request, Response } from "express";
+import { Request, Response } from "express";
 import { RoomModel as Room } from "@models/Room";
 import { IRoom } from "src/utils/IRoom";
+import { Error } from "mongoose";
 
 const ITEMS_PER_PAGE = 10;
-
 export default class RoomsController {
   async create(req: Request, res: Response) {
     try {
       const { body } = req;
 
-      Room.create(body, (err: ErrorRequestHandler, newRoom: IRoom) => {
+      Room.create(body, (err: Error, newRoom: IRoom) => {
         if (newRoom) {
           res.status(201).json(newRoom);
         } else {
@@ -26,7 +26,7 @@ export default class RoomsController {
       const { page = 1 }: any = req.query;
       const { body } = req && req;
 
-      Room.find(body, (err, rooms: IRoom) => {
+      Room.find(body, (err: Error, rooms: IRoom) => {
         if (rooms) {
           res.status(200).json(rooms);
         } else {
@@ -45,7 +45,7 @@ export default class RoomsController {
     try {
       const { id } = req.params;
 
-      Room.find({ _id: id }, (err, room: IRoom) => {
+      Room.find({ _id: id }, (err: Error, room: IRoom) => {
         if (room) {
           res.status(200).json(room);
         } else {
@@ -61,7 +61,7 @@ export default class RoomsController {
     try {
       const { number }: any = req.params;
 
-      Room.find({ room_no: number }, (err, room: IRoom) => {
+      Room.find({ room_no: number }, (err: Error, room: IRoom) => {
         if (room) {
           res.status(200).json(room);
         } else {
@@ -77,7 +77,7 @@ export default class RoomsController {
     try {
       const { id } = req.params;
 
-      Room.findByIdAndRemove(id, (err, deletedRoom) => {
+      Room.findByIdAndRemove(id, (err: Error, deletedRoom: IRoom) => {
         if (deletedRoom) {
           res.status(200).json("Room deleted successfully");
         } else {
@@ -94,14 +94,19 @@ export default class RoomsController {
       const { id } = req.params;
       const { body } = req;
 
-      Room.findByIdAndUpdate(id, body, { new: true }, (err, updatedRoom: IRoom) => {
-        if (updatedRoom) {
-          res.status(201);
-          res.json(updatedRoom);
-        } else {
-          res.status(400);
+      Room.findByIdAndUpdate(
+        id,
+        body,
+        { new: true },
+        (err: Error, updatedRoom: IRoom) => {
+          if (updatedRoom) {
+            res.status(201);
+            res.json(updatedRoom);
+          } else {
+            res.status(400);
+          }
         }
-      });
+      );
     } catch (err) {
       console.error(err);
     }

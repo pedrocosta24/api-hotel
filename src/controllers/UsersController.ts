@@ -1,6 +1,5 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import { UserModel as User } from "@models/User";
 import { RoomModel as Room } from "@models/Room";
 import { isAfter, parseISO, areIntervalsOverlapping } from "date-fns";
@@ -33,75 +32,6 @@ export default class UsersController {
         } else {
           res.sendStatus(400);
         }
-      });
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  async login(req: Request, res: Response) {
-    try {
-      const { email, password } = req.body;
-
-      if (!(email && password)) {
-        res.status(400).send("All input is required");
-      }
-
-      const user = await User.findOne({ email });
-
-      if (user && (await bcrypt.compare(password, user.password))) {
-        const token = jwt.sign(
-          { user_id: user._id, email, role: user.role },
-          process.env.SECRET,
-          {
-            expiresIn: Math.floor(Date.now() / 1000) + 60 * 60,
-          }
-        );
-
-        res.json({ token });
-      } else {
-        res.status(400).send("Invalid Credentials");
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  async verifyToken(req: RequestWithToken, res: Response, next: NextFunction) {
-    try {
-      let token =
-        req.headers["x-access-token"] &&
-        req.headers["x-access-token"].toString();
-
-      if (!token) {
-        return res.sendStatus(401);
-      }
-
-      jwt.verify(token, process.env.SECRET, (err: Error, decoded) => {
-        if (err) {
-          console.error(err.message);
-          return res.sendStatus(403);
-        }
-
-        req.decoded = { auth: true, decoded };
-
-        if (decoded.role != "ADMIN") {
-          return res.sendStatus(403);
-        }
-
-        next();
-      });
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  async me(req: Request, res: Response) {
-    try {
-      let token = req.headers["x-access-token"].toString();
-
-      jwt.verify(token, process.env.SECRET, (err, decoded) => {
-        res.status(200).send(decoded);
       });
     } catch (err) {
       console.error(err);
@@ -179,14 +109,19 @@ export default class UsersController {
       const { id } = req.params;
       const { body } = req;
 
-      User.findByIdAndUpdate(id, body, { new: true }, (err, updatedUser) => {
-        if (updatedUser) {
-          res.status(201);
-          res.json(updatedUser);
-        } else {
-          res.status(400);
+      User.findByIdAndUpdate(
+        id,
+        body,
+        { new: true },
+        (err: Error, updatedUser) => {
+          if (updatedUser) {
+            res.status(201);
+            res.json(updatedUser);
+          } else {
+            res.status(400);
+          }
         }
-      });
+      );
     } catch (err) {
       console.error(err);
     }
@@ -197,70 +132,73 @@ export default class UsersController {
       const { id } = req.params;
       const newBooking = req.body;
 
-      Room.findOne({ room_no: newBooking.room.room_no }, async (err, room) => {
-        if (room) {
-          if (
-            isAfter(
-              parseISO(newBooking.reserved[0].to),
-              parseISO(newBooking.reserved[0].from)
-            )
-          ) {
-            let validDate = true;
+      Room.findOne(
+        { room_no: newBooking.room.room_no },
+        async (err: Error, room) => {
+          if (room) {
+            if (
+              isAfter(
+                parseISO(newBooking.reserved[0].to),
+                parseISO(newBooking.reserved[0].from)
+              )
+            ) {
+              let validDate = true;
 
-            for (const reserved of room.reserved) {
-              if (
-                areIntervalsOverlapping(
-                  { start: reserved.from, end: reserved.to },
-                  {
-                    start: parseISO(newBooking.reserved[0].from),
-                    end: parseISO(newBooking.reserved[0].to),
-                  }
-                )
-              ) {
-                validDate = false;
-              }
-            }
-
-            if (validDate) {
-              let newRoom = await Room.findOneAndUpdate(
-                { room_no: newBooking.room.room_no },
-                { $push: { reserved: newBooking.reserved } },
-                { new: true }
-              );
-
-              newBooking.room = {
-                room_no: newRoom.room_no,
-                type: newRoom.type,
-                no_beds: newRoom.no_beds,
-                capacity: newRoom.capacity,
-                amenities: newRoom.amenities,
-                price_night: newRoom.price_night,
-                reserved: newRoom.reserved,
-                images: newRoom.images,
-              };
-
-              User.findByIdAndUpdate(
-                id,
-                { $push: { bookings: newBooking } },
-                { new: true },
-                (err, updatedBookings) => {
-                  if (updatedBookings) {
-                    res.status(201).json(updatedBookings);
-                  } else {
-                    res.status(400).send("Error adding booking");
-                  }
+              for (const reserved of room.reserved) {
+                if (
+                  areIntervalsOverlapping(
+                    { start: reserved.from, end: reserved.to },
+                    {
+                      start: parseISO(newBooking.reserved[0].from),
+                      end: parseISO(newBooking.reserved[0].to),
+                    }
+                  )
+                ) {
+                  validDate = false;
                 }
-              );
+              }
+
+              if (validDate) {
+                let newRoom = await Room.findOneAndUpdate(
+                  { room_no: newBooking.room.room_no },
+                  { $push: { reserved: newBooking.reserved } },
+                  { new: true }
+                );
+
+                newBooking.room = {
+                  room_no: newRoom.room_no,
+                  type: newRoom.type,
+                  no_beds: newRoom.no_beds,
+                  capacity: newRoom.capacity,
+                  amenities: newRoom.amenities,
+                  price_night: newRoom.price_night,
+                  reserved: newRoom.reserved,
+                  images: newRoom.images,
+                };
+
+                User.findByIdAndUpdate(
+                  id,
+                  { $push: { bookings: newBooking } },
+                  { new: true },
+                  (err: Error, updatedBookings) => {
+                    if (updatedBookings) {
+                      res.status(201).json(updatedBookings);
+                    } else {
+                      res.status(400).send("Error adding booking");
+                    }
+                  }
+                );
+              } else {
+                res.status(400).send("Date error");
+              }
             } else {
               res.status(400).send("Date error");
             }
           } else {
-            res.status(400).send("Date error");
+            res.sendStatus(400);
           }
-        } else {
-          res.sendStatus(400);
         }
-      });
+      );
     } catch (err) {
       console.error(err);
     }
@@ -291,6 +229,46 @@ export default class UsersController {
           res.status(400);
         }
       });
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async myBookings(req: RequestWithToken, res: Response) {
+    try {
+      let token = req.decoded;
+
+      User.findById(
+        token.decoded.user_id,
+        "bookings",
+        (err: Error, bookings: any) => {
+          if (bookings) {
+            res.status(200).json(bookings);
+          } else {
+            res.status(400);
+          }
+        }
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async myRooms(req: RequestWithToken, res: Response) {
+    try {
+      let token = req.decoded;
+
+      User.distinct(
+        "bookings.room",
+        { _id: token.decoded.user_id },
+        (err: Error, bookings: any) => {
+          if (bookings) {
+            res.status(200).json(bookings);
+          } else {
+            res.status(400);
+          }
+        }
+      );
     } catch (err) {
       console.error(err);
     }

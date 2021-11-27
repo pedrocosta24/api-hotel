@@ -1,12 +1,14 @@
 import express from "express";
 import RoomsController from "@controllers/RoomsController";
 import UsersController from "@controllers/UsersController";
+import AuthController from "@controllers/AuthController";
 
 const router = express.Router();
 const usersController = new UsersController();
 const roomsController = new RoomsController();
+const authController = new AuthController();
 
-router.use(usersController.verifyToken);
+router.use(authController.verifyTokenAdmin);
 
 router.get("/users", usersController.findAll); // Get a list of all users
 
