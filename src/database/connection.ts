@@ -1,7 +1,7 @@
 import "../lib/env";
 import { connect } from "mongoose";
 
-connect(`${process.env.DB_URL}`)
+connect(`${process.env.DATABASE_URL}`)
   .then(() => {
     console.log("DB connected successfully 🟢");
   })
