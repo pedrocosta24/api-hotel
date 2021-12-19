@@ -3,7 +3,8 @@ import { RoomModel as Room } from "@models/Room";
 import { IRoom } from "src/utils/IRoom";
 import { Error } from "mongoose";
 
-const ITEMS_PER_PAGE = 10;
+let ITEMS_PER_PAGE: any = 10;
+
 export default class RoomsController {
   async create(req: Request, res: Response) {
     try {
@@ -25,6 +26,7 @@ export default class RoomsController {
     try {
       const { page = 1 }: any = req.query;
       const { body } = req && req;
+      req.query.limit ? (ITEMS_PER_PAGE = req.query.limit) : null;
 
       Room.find(body, (err: Error, rooms: IRoom) => {
         if (rooms) {
@@ -78,6 +80,7 @@ export default class RoomsController {
     try {
       const { page = 1 }: any = req.query;
       const { checkIn, checkOut }: any = req.query;
+      req.query.limit ? (ITEMS_PER_PAGE = req.query.limit) : null;
 
       Room.find(
         {
@@ -118,6 +121,7 @@ export default class RoomsController {
   async filterRooms(req: Request, res: Response) {
     try {
       const { page = 1 }: any = req.query;
+      req.query.limit ? (ITEMS_PER_PAGE = req.query.limit) : null;
       const { checkIn, checkOut }: any = req.query;
       const q = req.query;
 
