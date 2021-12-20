@@ -1,7 +1,9 @@
 import { IBooking } from "./IBooking";
 
 export interface IUser {
-  name: string;
+  first_name: string;
+  last_name: string;
+  avatar: string;
   email: string;
   phone_number: string;
   address: IAddress;

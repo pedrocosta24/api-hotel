@@ -14,7 +14,15 @@ export default class UsersController {
     try {
       let { body } = req;
 
-      if (!(body.email && body.password && body.name && body.phone_number)) {
+      if (
+        !(
+          body.email &&
+          body.password &&
+          body.first_name &&
+          body.last_name &&
+          body.phone_number
+        )
+      ) {
         res.status(400).send("All input is required");
       }
 

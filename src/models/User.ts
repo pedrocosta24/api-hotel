@@ -2,7 +2,9 @@ import { model, Schema } from "mongoose";
 import { IUser } from "../utils/IUser";
 
 let UserSchema = new Schema<IUser>({
-  name: { type: String, required: true },
+  first_name: { type: String, required: true },
+  last_name: { type: String, required: true },
+  avatar: { type: String, required: false },
   email: { type: String, required: true, unique: true },
   phone_number: { type: String, required: true },
   address: {
