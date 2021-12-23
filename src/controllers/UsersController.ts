@@ -289,4 +289,24 @@ export default class UsersController {
       console.error(err);
     }
   }
+
+  async getMyInfo(req: RequestWithToken, res: Response) {
+    try {
+      let token = req.decoded;
+
+      User.findById(
+        token.decoded.user_id,
+        "-_id -bookings -role -password -__v",
+        (err: Error, user: any) => {
+          if (user) {
+            res.status(200).json(user);
+          } else {
+            res.status(400);
+          }
+        }
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  }
 }

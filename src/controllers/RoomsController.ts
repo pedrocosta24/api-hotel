@@ -37,8 +37,7 @@ export default class RoomsController {
       })
         .sort([[req.query.orderBy, req.query.direction]])
         .limit(ITEMS_PER_PAGE)
-        .skip((page - 1) * ITEMS_PER_PAGE)
-        .getFilter();
+        .skip((page - 1) * ITEMS_PER_PAGE);
     } catch (err) {
       console.error(err);
     }
@@ -120,10 +119,10 @@ export default class RoomsController {
 
   async filterRooms(req: Request, res: Response) {
     try {
-      const { page = 1 }: any = req.query;
-      req.query.limit ? (ITEMS_PER_PAGE = req.query.limit) : null;
-      const { checkIn, checkOut }: any = req.query;
       const q = req.query;
+      const { page = 1 }: any = q;
+      q.limit ? (ITEMS_PER_PAGE = q.limit) : null;
+      const { checkIn, checkOut }: any = q;
 
       let filter = {};
 
@@ -215,8 +214,7 @@ export default class RoomsController {
       })
         .sort([[q.orderBy, q.direction]])
         .limit(ITEMS_PER_PAGE)
-        .skip((page - 1) * ITEMS_PER_PAGE)
-        .getFilter();
+        .skip((page - 1) * ITEMS_PER_PAGE);
     } catch (err) {
       console.error(err);
     }
