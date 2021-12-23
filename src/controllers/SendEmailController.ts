@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 
 import { UserModel } from "@models/User";
 import { TokenModel } from "@models/Token";
-import { sendEmail } from "src/utils/sendEmail";
+import { sendEmail } from "../utils/sendEmail";
 
 export default class SendEmailController {
   async requestReset(req: Request, res: Response) {
