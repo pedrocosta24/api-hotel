@@ -20,7 +20,7 @@ export default class AuthController {
 
       if (user && (await bcrypt.compare(password, user.password))) {
         const token = jwt.sign(
-          { user_id: user._id, email, role: user.role, name: user.first_name, avatar: user.avatar },
+          { user_id: user._id, email, role: user.role },
           process.env.SECRET,
           {
             expiresIn: Math.floor(Date.now() / 1000) + 60 * 60,
@@ -29,7 +29,7 @@ export default class AuthController {
 
         res.json({ token });
       } else {
-        res.status(400).send("Invalid Credentials");
+        res.status(401).json("Invalid Credentials");
       }
     } catch (err) {
       console.error(err);

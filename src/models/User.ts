@@ -8,13 +8,13 @@ let UserSchema = new Schema<IUser>({
   email: { type: String, required: true, unique: true },
   phone_number: { type: String, required: true },
   address: {
-    street: { type: String, required: true },
-    city: { type: String, required: true },
-    postal_code: { type: String, required: true },
-    country: { type: String, required: true },
+    street: { type: String },
+    city: { type: String },
+    postal_code: { type: String },
+    country: { type: String },
   },
-  birthday: { type: Date, required: true },
-  nif: { type: Number, required: true, unique: true },
+  birthday: { type: Date },
+  nif: { type: Number, unique: true },
   bookings: [
     {
       room: {
