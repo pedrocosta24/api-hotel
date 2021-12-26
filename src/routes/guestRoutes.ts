@@ -8,7 +8,11 @@ const authController = new AuthController();
 
 router.use(authController.verifyTokenLoggedIn);
 
-router.get("/myInfo", usersController.getMyInfo); // Get my info"
+router
+  .route("/myInfo")
+  .get(usersController.getMyInfo) // Get my info"
+  .put(usersController.updateMyInfo); // Update my info
+
 router.get("/rooms", usersController.myRooms); // Get rooms from bookings of logged in user
 router.get("/bookings", usersController.myBookings); // Get bookings of logged in user
 

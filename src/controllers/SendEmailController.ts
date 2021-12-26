@@ -25,7 +25,7 @@ export default class SendEmailController {
         }).save();
       }
 
-      const link = `http://localhost:3333/auth/password-reset/${user._id}/${token.token}`;
+      const link = `https://golden-skin-hotel.vercel.app/auth/password-reset/${user._id}/${token.token}`;
       await sendEmail(
         user.email,
         "Password reset - Golden Skin Hotel",

@@ -309,4 +309,27 @@ export default class UsersController {
       console.error(err);
     }
   }
+
+  async updateMyInfo(req: RequestWithToken, res: Response) {
+    try {
+      let token = req.decoded;
+      const { body } = req;
+
+      User.findByIdAndUpdate(
+        token.decoded.user_id,
+        body,
+        { new: true },
+        (err: Error, updatedUser) => {
+          if (updatedUser) {
+            res.status(201);
+            res.json(updatedUser);
+          } else {
+            res.status(400);
+          }
+        }
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  }
 }
