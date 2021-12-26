@@ -20,7 +20,7 @@ export default class AuthController {
 
       if (user && (await bcrypt.compare(password, user.password))) {
         const token = jwt.sign(
-          { user_id: user._id, email, role: user.role },
+          { user_id: user._id, email, role: user.role, name: user.first_name, avatar: user.avatar },
           process.env.SECRET,
           {
             expiresIn: Math.floor(Date.now() / 1000) + 60 * 60,
