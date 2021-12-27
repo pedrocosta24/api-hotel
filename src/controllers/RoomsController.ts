@@ -124,6 +124,14 @@ export default class RoomsController {
       q.limit ? (ITEMS_PER_PAGE = q.limit) : null;
       const { checkIn, checkOut }: any = q;
 
+      let orders: any = [];
+      if (q.orderByPrice) {
+        orders.push(["price_night", req.query.orderByPrice]);
+      }
+      if (q.orderByArea) {
+        orders.push(["area", q.orderByArea]);
+      }
+
       let filter = {};
 
       if (q.checkIn && q.checkOut) {
@@ -212,7 +220,7 @@ export default class RoomsController {
           res.status(400);
         }
       })
-        .sort([[q.orderBy, q.direction]])
+        .sort(orders)
         .limit(ITEMS_PER_PAGE)
         .skip((page - 1) * ITEMS_PER_PAGE);
     } catch (err) {
