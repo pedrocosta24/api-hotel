@@ -1,11 +1,11 @@
 import { IRoom, IReserved } from "./IRoom";
 
 export interface IBooking {
-  room: IRoom;
+  room: string;
   no_guests: number;
   extras?: string[];
-  observations: string;
-  reserved: IReserved[];
+  observations?: string;
+  dates: IReserved[];
   no_nights: number;
   final_price: number;
 }

@@ -9,6 +9,7 @@ export interface IUser {
   address: IAddress;
   birthday: Date;
   nif: number;
+  fav_rooms?: string[];
   bookings?: IBooking[];
   password: string;
   role: "GUEST" | "ADMIN";

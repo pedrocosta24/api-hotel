@@ -1,5 +1,6 @@
 import { model, Schema } from "mongoose";
 import { IUser } from "../utils/IUser";
+import { RoomSchema } from "./Room";
 
 let UserSchema = new Schema<IUser>({
   first_name: { type: String, required: true },
@@ -15,35 +16,19 @@ let UserSchema = new Schema<IUser>({
   },
   birthday: { type: Date },
   nif: { type: Number, unique: true },
+  fav_rooms: [{ type: Schema.Types.ObjectId, ref: "Room" }],
   bookings: [
     {
-      room: {
-        room_no: { type: Number, required: true },
-        type: { type: String, enum: ["single", "double", "king", "deluxe"] },
-        no_beds: { type: Number, required: true },
-        capacity: { type: Number, required: true },
-        ammenities: {
-          wifi: { type: Boolean, required: true, default: false },
-          tv: { type: Boolean, required: true, default: false },
-          crib: { type: Boolean, required: true, default: false },
-          airConditioning: { type: Boolean, required: true, default: false },
-          iron: { type: Boolean, required: true, default: false },
-          smokeAlarm: { type: Boolean, required: true, default: false },
-        },
-        price_night: { type: Number, required: true },
-        images: [{ type: String, required: false }],
-      },
-      no_guests: { type: Number, required: true },
+      room: { type: Schema.Types.ObjectId, ref: "Room" },
+      no_guests: { type: Number },
       extras: [{ type: String }],
       observations: { type: String },
-      reserved: [
-        {
-          from: { type: Date },
-          to: { type: Date },
-        },
-      ],
-      no_nights: { type: Number, required: true },
-      final_price: { type: Number, required: true },
+      dates: {
+        from: { type: Date },
+        to: { type: Date },
+      },
+      no_nights: { type: Number },
+      final_price: { type: Number },
     },
   ],
   password: { type: String, required: true },
@@ -51,5 +36,6 @@ let UserSchema = new Schema<IUser>({
 });
 
 let UserModel = model("Users", UserSchema);
+let Room = model("Room", RoomSchema);
 
 export { UserModel, UserSchema };

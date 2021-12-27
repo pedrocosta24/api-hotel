@@ -1,7 +1,7 @@
 import { model, Schema } from "mongoose";
 import { IRoom } from "../utils/IRoom";
 
-let RoomSchema = new Schema<IRoom>({
+export let RoomSchema = new Schema<IRoom>({
   room_no: { type: Number, required: true, unique: true },
   type: { type: String, enum: ["single", "double", "king", "deluxe"] },
   no_beds: { type: Number, required: true },
