@@ -443,4 +443,28 @@ export default class UsersController {
       console.error(err);
     }
   }
+
+  // remove room id from fav_rooms array of user
+  async removeFavRoom(req: RequestWithToken, res: Response) {
+    try {
+      let token = req.decoded;
+      const { room_id } = req.query;
+
+      User.findByIdAndUpdate(
+        token.decoded.user_id,
+        { $pull: { fav_rooms: room_id } },
+        { new: true },
+        (err: Error, updatedUser) => {
+          if (updatedUser) {
+            res.status(201);
+            res.json(updatedUser);
+          } else {
+            res.status(400);
+          }
+        }
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  }
 }

@@ -16,7 +16,8 @@ router
 router
   .route("/favRooms")
   .get(usersController.getFavRooms) // Get my favorite rooms
-  .put(usersController.addFavRoom); // Add a room to my favorite rooms
+  .put(usersController.addFavRoom) // Add a room to my favorite rooms
+  .delete(usersController.removeFavRoom); // Remove a room from my favorite rooms
 
 router.get("/rooms", usersController.myRooms); // Get rooms from bookings of logged in user
 
