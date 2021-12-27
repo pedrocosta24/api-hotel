@@ -402,7 +402,7 @@ export default class UsersController {
 
       User.findByIdAndUpdate(
         token.decoded.user_id,
-        { $push: { fav_rooms: room_id } },
+        { $addToSet: { fav_rooms: room_id } },
         { new: true },
         (err: Error, updatedUser) => {
           if (updatedUser) {
