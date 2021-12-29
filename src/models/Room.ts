@@ -6,6 +6,7 @@ export let RoomSchema = new Schema<IRoom>({
   type: { type: String, enum: ["single", "double", "king", "deluxe"] },
   no_beds: { type: Number, required: true },
   capacity: { type: Number, required: true },
+  area: { type: Number, required: true },
   amenities: {
     wifi: { type: Boolean, required: true, default: false },
     tv: { type: Boolean, required: true, default: false },
