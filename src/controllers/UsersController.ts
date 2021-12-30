@@ -50,7 +50,7 @@ export default class UsersController {
     try {
       const { page = 1 }: any = req.query;
 
-      User.find({}, (err: Error, users) => {
+      User.find({}, "-password -__v", (err: Error, users) => {
         if (users) {
           res.status(200).json(users);
         } else {
@@ -351,7 +351,7 @@ export default class UsersController {
 
       User.findById(
         token.decoded.user_id,
-        "-_id -bookings -role -password -__v",
+        "-_id -bookings -password -__v",
         (err: Error, user: any) => {
           if (user) {
             res.status(200).json(user);
