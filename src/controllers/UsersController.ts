@@ -2,13 +2,7 @@ import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import { UserModel as User } from "@models/User";
 import { RoomModel as Room } from "@models/Room";
-import {
-  isAfter,
-  parseISO,
-  areIntervalsOverlapping,
-  Interval,
-  format,
-} from "date-fns";
+import { isAfter, parseISO, areIntervalsOverlapping } from "date-fns";
 
 interface RequestWithToken extends Request {
   decoded: any;
@@ -467,4 +461,32 @@ export default class UsersController {
       console.error(err);
     }
   }
+
+  async getAllBookings(req: RequestWithToken, res: Response) {
+    try {
+      const { page = 1 }: any = req.query;
+
+      User.find({}, { _id: 1, bookings: 1 }, (err: Error, bookings: any) => {
+        if (bookings) {
+          res.status(200).json(
+            bookings
+              .map((userBookings: any) => {
+                return userBookings.bookings;
+              })
+              .flat()
+          );
+        } else {
+          res.status(400);
+        }
+      }).populate("bookings.room");
+    } catch (err) {
+      console.error(err);
+    }
+  }
 }
+
+/*             bookings
+              .map((userBookings: any) => {
+                return userBookings.bookings;
+              })
+              .flat(); */

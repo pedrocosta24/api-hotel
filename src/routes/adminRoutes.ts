@@ -43,4 +43,6 @@ router
 
 router.get("/rooms/number/:number", roomsController.findByRoomNo); // Get room by room_no
 
+router.get("/bookings", usersController.getAllBookings); // Get all bookings
+
 export default router;
