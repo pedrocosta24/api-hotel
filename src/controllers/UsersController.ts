@@ -11,7 +11,8 @@ interface RequestWithToken extends Request {
   decoded: any;
 }
 
-const ITEMS_PER_PAGE = 10;
+let ITEMS_PER_PAGE = 10;
+
 export default class UsersController {
   async create(req: Request, res: Response) {
     try {
@@ -51,7 +52,12 @@ export default class UsersController {
 
   async findAll(req: Request, res: Response) {
     try {
-      const { page = 1 }: any = req.query;
+      let page: number = req.query.page
+        ? parseInt(req.query.page.toString())
+        : 1;
+      ITEMS_PER_PAGE = req.query.limit
+        ? parseInt(req.query.limit.toString())
+        : ITEMS_PER_PAGE;
 
       User.find({}, "-password -__v", (err: Error, users: IUser[]) => {
         if (users) {
@@ -88,7 +94,12 @@ export default class UsersController {
   async getBookingsFromUser(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const { page = 1 }: any = req.query;
+      let page: number = req.query.page
+        ? parseInt(req.query.page.toString())
+        : 1;
+      ITEMS_PER_PAGE = req.query.limit
+        ? parseInt(req.query.limit.toString())
+        : ITEMS_PER_PAGE;
 
       User.findById(id, "bookings", (err: Error, bookings: IBooking[]) => {
         if (bookings) {
@@ -309,7 +320,12 @@ export default class UsersController {
   async myBookings(req: RequestWithToken, res: Response) {
     try {
       let token = req.decoded;
-      const { page = 1 }: any = req.query;
+      let page: number = req.query.page
+        ? parseInt(req.query.page.toString())
+        : 1;
+      ITEMS_PER_PAGE = req.query.limit
+        ? parseInt(req.query.limit.toString())
+        : ITEMS_PER_PAGE;
 
       User.findById(
         token.decoded.user_id,
@@ -425,7 +441,12 @@ export default class UsersController {
   async getFavRooms(req: RequestWithToken, res: Response) {
     try {
       let token = req.decoded;
-      const { page = 1 }: any = req.query;
+      let page: number = req.query.page
+        ? parseInt(req.query.page.toString())
+        : 1;
+      ITEMS_PER_PAGE = req.query.limit
+        ? parseInt(req.query.limit.toString())
+        : ITEMS_PER_PAGE;
 
       User.findById(
         token.decoded.user_id,
@@ -474,7 +495,12 @@ export default class UsersController {
 
   async getAllBookings(req: RequestWithToken, res: Response) {
     try {
-      const { page = 1 }: any = req.query;
+      let page: number = req.query.page
+        ? parseInt(req.query.page.toString())
+        : 1;
+      ITEMS_PER_PAGE = req.query.limit
+        ? parseInt(req.query.limit.toString())
+        : ITEMS_PER_PAGE;
 
       User.find({}, { _id: 1, bookings: 1 }, (err: Error, bookings: any) => {
         if (bookings) {

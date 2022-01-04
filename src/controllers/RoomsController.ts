@@ -24,9 +24,13 @@ export default class RoomsController {
 
   async findAll(req: Request, res: Response) {
     try {
-      const { page = 1 }: any = req.query;
       const { body } = req && req;
-      req.query.limit ? (ITEMS_PER_PAGE = req.query.limit) : null;
+      let page: number = req.query.page
+        ? parseInt(req.query.page.toString())
+        : 1;
+      ITEMS_PER_PAGE = req.query.limit
+        ? parseInt(req.query.limit.toString())
+        : ITEMS_PER_PAGE;
 
       Room.find(body, (err: Error, rooms: IRoom[]) => {
         if (rooms) {
@@ -78,9 +82,13 @@ export default class RoomsController {
 
   async findAvailableRooms(req: Request, res: Response) {
     try {
-      const { page = 1 }: any = req.query;
       const { checkIn, checkOut }: any = req.query;
-      req.query.limit ? (ITEMS_PER_PAGE = req.query.limit) : null;
+      let page: number = req.query.page
+        ? parseInt(req.query.page.toString())
+        : 1;
+      ITEMS_PER_PAGE = req.query.limit
+        ? parseInt(req.query.limit.toString())
+        : ITEMS_PER_PAGE;
 
       Room.find(
         {
@@ -122,8 +130,12 @@ export default class RoomsController {
   async filterRooms(req: Request, res: Response) {
     try {
       const q = req.query;
-      const { page = 1 }: any = q;
-      q.limit ? (ITEMS_PER_PAGE = q.limit) : null;
+      let page: number = req.query.page
+        ? parseInt(req.query.page.toString())
+        : 1;
+      ITEMS_PER_PAGE = req.query.limit
+        ? parseInt(req.query.limit.toString())
+        : ITEMS_PER_PAGE;
       const { checkIn, checkOut }: any = q;
 
       let orders: any = [];
