@@ -3,7 +3,7 @@ import { RoomModel as Room } from "@models/Room";
 import { IRoom } from "src/utils/IRoom";
 import { Error } from "mongoose";
 
-let ITEMS_PER_PAGE: any = 3;
+let ITEMS_PER_PAGE: any = 6;
 
 export default class RoomsController {
   async create(req: Request, res: Response) {
