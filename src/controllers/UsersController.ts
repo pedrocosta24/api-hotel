@@ -11,7 +11,7 @@ interface RequestWithToken extends Request {
   decoded: any;
 }
 
-let ITEMS_PER_PAGE = 10;
+let ITEMS_PER_PAGE: number = 6;
 
 export default class UsersController {
   async create(req: Request, res: Response) {
@@ -59,6 +59,12 @@ export default class UsersController {
         ? parseInt(req.query.limit.toString())
         : ITEMS_PER_PAGE;
 
+      User.countDocuments({}, (err: Error, count: number) => {
+        if (count) {
+          res.setHeader("x-total-count", count.toString());
+        }
+      });
+
       User.find({}, "-password -__v", (err: Error, users: IUser[]) => {
         if (users) {
           res.setHeader("x-total-count", users.length.toString());
@@ -100,6 +106,12 @@ export default class UsersController {
       ITEMS_PER_PAGE = req.query.limit
         ? parseInt(req.query.limit.toString())
         : ITEMS_PER_PAGE;
+
+      User.countDocuments({ _id: id }, (err: Error, count: number) => {
+        if (count) {
+          res.setHeader("x-total-count", count.toString());
+        }
+      });
 
       User.findById(id, "bookings", (err: Error, bookings: IBooking[]) => {
         if (bookings) {
