@@ -32,14 +32,11 @@ export default class RoomsController {
         ? parseInt(req.query.limit.toString())
         : ITEMS_PER_PAGE;
 
-      Room.countDocuments({}, (err: Error, count: number) => {
-        if (count) {
-          res.setHeader("x-total-count", count.toString());
-        }
-      });
+      let count = await Room.countDocuments({});
 
       Room.find(body, (err: Error, rooms: IRoom[]) => {
         if (rooms) {
+          res.setHeader("x-total-count", count.toString());
           res.status(200).json(rooms);
         } else {
           res.status(400);
@@ -95,32 +92,25 @@ export default class RoomsController {
         ? parseInt(req.query.limit.toString())
         : ITEMS_PER_PAGE;
 
-      Room.countDocuments(
-        {
-          $or: [
-            {
-              $nor: [
-                {
-                  "reserved.to": {
-                    $gte: new Date(checkIn),
-                  },
-                  "reserved.from": {
-                    $lte: new Date(checkOut),
-                  },
+      let count = await Room.countDocuments({
+        $or: [
+          {
+            $nor: [
+              {
+                "reserved.to": {
+                  $gte: new Date(checkIn),
                 },
-              ],
-            },
-            {
-              reserved: { $eq: [] },
-            },
-          ],
-        },
-        (err: Error, count: number) => {
-          if (count) {
-            res.setHeader("x-total-count", count.toString());
-          }
-        }
-      );
+                "reserved.from": {
+                  $lte: new Date(checkOut),
+                },
+              },
+            ],
+          },
+          {
+            reserved: { $eq: [] },
+          },
+        ],
+      });
 
       Room.find(
         {
@@ -144,6 +134,7 @@ export default class RoomsController {
         },
         (err: Error, rooms: IRoom[]) => {
           if (rooms) {
+            res.setHeader("x-total-count", count.toString());
             res.status(200).json(rooms);
           } else {
             res.status(400);
@@ -258,14 +249,11 @@ export default class RoomsController {
         };
       }
 
-      Room.countDocuments(filter, (err: Error, count: number) => {
-        if (count) {
-          res.setHeader("x-total-count", count.toString());
-        }
-      });
+      let count = await Room.countDocuments(filter);
 
       Room.find(filter, (err: Error, rooms: IRoom[]) => {
         if (rooms) {
+          res.setHeader("x-total-count", count.toString());
           res.status(200).json(rooms);
         } else {
           res.status(400);
