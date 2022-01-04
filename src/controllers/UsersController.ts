@@ -3,6 +3,9 @@ import bcrypt from "bcryptjs";
 import { UserModel as User } from "@models/User";
 import { RoomModel as Room } from "@models/Room";
 import { isAfter, parseISO, areIntervalsOverlapping } from "date-fns";
+import { IUser } from "src/utils/IUser";
+import { IBooking } from "src/utils/IBooking";
+import { IRoom } from "src/utils/IRoom";
 
 interface RequestWithToken extends Request {
   decoded: any;
@@ -50,8 +53,9 @@ export default class UsersController {
     try {
       const { page = 1 }: any = req.query;
 
-      User.find({}, "-password -__v", (err: Error, users) => {
+      User.find({}, "-password -__v", (err: Error, users: IUser[]) => {
         if (users) {
+          res.setHeader("x-total-count", users.length.toString());
           res.status(200).json(users);
         } else {
           res.status(400);
@@ -86,8 +90,9 @@ export default class UsersController {
       const { id } = req.params;
       const { page = 1 }: any = req.query;
 
-      User.findById(id, "bookings", (err: Error, bookings: any) => {
+      User.findById(id, "bookings", (err: Error, bookings: IBooking[]) => {
         if (bookings) {
+          res.setHeader("x-total-count", bookings.length.toString());
           res.status(200).json(bookings);
         } else {
           res.status(400);
@@ -273,8 +278,9 @@ export default class UsersController {
     try {
       const { id } = req.params;
 
-      User.findById(id, "bookings.room", (err: Error, rooms: any) => {
+      User.findById(id, "bookings.room", (err: Error, rooms: IRoom[]) => {
         if (rooms) {
+          res.setHeader("x-total-count", rooms.length.toString());
           res.status(200).json(rooms);
         } else {
           res.status(400);
@@ -287,8 +293,9 @@ export default class UsersController {
 
   async getAllRoomsFromBookings(req: Request, res: Response) {
     try {
-      User.distinct("bookings.room", (err: Error, rooms: any) => {
+      User.distinct("bookings.room", (err: Error, rooms: IRoom[]) => {
         if (rooms) {
+          res.setHeader("x-total-count", rooms.length.toString());
           res.status(200).send(rooms);
         } else {
           res.status(400);
@@ -309,7 +316,8 @@ export default class UsersController {
         "bookings",
         (err: Error, bookings: any) => {
           if (bookings) {
-            res.status(200).json(bookings);
+            res.setHeader("x-total-count", bookings.bookings.length.toString());
+            res.status(200).json(bookings.bookings);
           } else {
             res.status(400);
           }
@@ -334,7 +342,8 @@ export default class UsersController {
         { _id: token.decoded.user_id },
         (err: Error, bookings: any) => {
           if (bookings) {
-            res.status(200).json(bookings);
+            res.setHeader("x-total-count", bookings.bookings.length.toString());
+            res.status(200).json(bookings.bookings);
           } else {
             res.status(400);
           }
@@ -423,7 +432,8 @@ export default class UsersController {
         "fav_rooms",
         (err: Error, rooms: any) => {
           if (rooms) {
-            res.status(200).json(rooms);
+            res.setHeader("x-total-count", rooms.fav_rooms.length.toString());
+            res.status(200).json(rooms.fav_rooms);
           } else {
             res.status(400);
           }
@@ -468,6 +478,15 @@ export default class UsersController {
 
       User.find({}, { _id: 1, bookings: 1 }, (err: Error, bookings: any) => {
         if (bookings) {
+          res.setHeader(
+            "x-total-count",
+            bookings
+              .map((userBookings: any) => {
+                return userBookings.bookings;
+              })
+              .flat()
+              .length.toString()
+          );
           res.status(200).json(
             bookings
               .map((userBookings: any) => {

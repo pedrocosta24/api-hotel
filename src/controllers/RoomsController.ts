@@ -3,7 +3,7 @@ import { RoomModel as Room } from "@models/Room";
 import { IRoom } from "src/utils/IRoom";
 import { Error } from "mongoose";
 
-let ITEMS_PER_PAGE: any = 10;
+let ITEMS_PER_PAGE: any = 3;
 
 export default class RoomsController {
   async create(req: Request, res: Response) {
@@ -28,8 +28,9 @@ export default class RoomsController {
       const { body } = req && req;
       req.query.limit ? (ITEMS_PER_PAGE = req.query.limit) : null;
 
-      Room.find(body, (err: Error, rooms: IRoom) => {
+      Room.find(body, (err: Error, rooms: IRoom[]) => {
         if (rooms) {
+          res.setHeader("x-total-count", rooms.length.toString());
           res.status(200).json(rooms);
         } else {
           res.status(400);
@@ -101,8 +102,9 @@ export default class RoomsController {
             },
           ],
         },
-        (err: Error, rooms: IRoom) => {
+        (err: Error, rooms: IRoom[]) => {
           if (rooms) {
+            res.setHeader("x-total-count", rooms.length.toString());
             res.status(200).json(rooms);
           } else {
             res.status(400);
@@ -213,8 +215,9 @@ export default class RoomsController {
         };
       }
 
-      Room.find(filter, (err: Error, rooms: IRoom) => {
+      Room.find(filter, (err: Error, rooms: IRoom[]) => {
         if (rooms) {
+          res.setHeader("x-total-count", rooms.length.toString());
           res.status(200).json(rooms);
         } else {
           res.status(400);
