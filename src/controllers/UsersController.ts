@@ -55,11 +55,16 @@ export default class UsersController {
       let page: number = req.query.page
         ? parseInt(req.query.page.toString())
         : 1;
-      ITEMS_PER_PAGE = req.query.limit
-        ? parseInt(req.query.limit.toString())
-        : ITEMS_PER_PAGE;
 
       let count = await User.countDocuments({});
+
+      if (req.query.noLimit == "true") {
+        ITEMS_PER_PAGE = count;
+      } else {
+        ITEMS_PER_PAGE = req.query.limit
+          ? parseInt(req.query.limit.toString())
+          : ITEMS_PER_PAGE;
+      }
 
       User.find({}, "-password -__v", (err: Error, users: IUser[]) => {
         if (users) {

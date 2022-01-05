@@ -28,11 +28,16 @@ export default class RoomsController {
       let page: number = req.query.page
         ? parseInt(req.query.page.toString())
         : 1;
-      ITEMS_PER_PAGE = req.query.limit
-        ? parseInt(req.query.limit.toString())
-        : ITEMS_PER_PAGE;
 
       let count = await Room.countDocuments({});
+
+      if (req.query.noLimit == "true") {
+        ITEMS_PER_PAGE = count;
+      } else {
+        ITEMS_PER_PAGE = req.query.limit
+          ? parseInt(req.query.limit.toString())
+          : ITEMS_PER_PAGE;
+      }
 
       Room.find(body, (err: Error, rooms: IRoom[]) => {
         if (rooms) {
