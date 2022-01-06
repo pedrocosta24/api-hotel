@@ -15,7 +15,7 @@ let UserSchema = new Schema<IUser>({
     country: { type: String },
   },
   birthday: { type: Date },
-  nif: { type: Number, unique: true },
+  nif: { type: Number, maxlength: 9, unique: true },
   fav_rooms: [{ type: Schema.Types.ObjectId, ref: "Room" }],
   bookings: [
     {
