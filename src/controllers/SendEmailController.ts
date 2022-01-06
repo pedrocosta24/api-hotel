@@ -31,9 +31,9 @@ export default class SendEmailController {
         user.email,
         "Password reset - Golden Skin Hotel",
         "Click to reset your password " + link
-      );
-
-      res.send("password reset link sent to your email account");
+      ).then(() => {
+        res.status(200).send("password reset link sent to your email account");
+      });
     } catch (error) {
       res.status(400).send("An error occurred");
       console.log(error);

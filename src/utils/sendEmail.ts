@@ -1,6 +1,10 @@
 import nodemailer from "nodemailer";
 
-export const sendEmail = async (email, subject, text) => {
+export const sendEmail = async (
+  email: string,
+  subject: string,
+  text: string
+) => {
   try {
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -8,13 +12,39 @@ export const sendEmail = async (email, subject, text) => {
         user: process.env.MAIL_USER,
         pass: process.env.MAIL_PASS,
       },
+      secure: true,
     });
 
-    await transporter.sendMail({
-      from: process.env.MAIL_FROM,
-      to: email,
-      subject: subject,
-      text: text,
+    await new Promise((resolve, reject) => {
+      transporter.verify(function (error, success) {
+        if (error) {
+          console.log(error);
+          reject(error);
+        } else {
+          console.log("Server is ready to take our messages");
+          resolve(success);
+        }
+      });
+    });
+
+    await new Promise((resolve, reject) => {
+      transporter.sendMail(
+        {
+          from: process.env.MAIL_FROM,
+          to: email,
+          subject: subject,
+          text: text,
+        },
+        (err, info) => {
+          if (err) {
+            console.log(err);
+            reject(err);
+          } else {
+            console.log(info);
+            resolve(info);
+          }
+        }
+      );
     });
 
     console.log("Email sent successfully");

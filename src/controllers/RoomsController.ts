@@ -3,8 +3,6 @@ import { RoomModel as Room } from "@models/Room";
 import { IRoom } from "src/utils/IRoom";
 import { Error } from "mongoose";
 
-let ITEMS_PER_PAGE: number = 6;
-
 export default class RoomsController {
   async create(req: Request, res: Response) {
     try {
@@ -30,6 +28,8 @@ export default class RoomsController {
         : 1;
 
       let count = await Room.countDocuments({});
+
+      let ITEMS_PER_PAGE = 6;
 
       if (req.query.noLimit == "true") {
         ITEMS_PER_PAGE = count;
@@ -93,6 +93,9 @@ export default class RoomsController {
       let page: number = req.query.page
         ? parseInt(req.query.page.toString())
         : 1;
+
+      let ITEMS_PER_PAGE = 6;
+
       ITEMS_PER_PAGE = req.query.limit
         ? parseInt(req.query.limit.toString())
         : ITEMS_PER_PAGE;
@@ -160,6 +163,9 @@ export default class RoomsController {
       let page: number = req.query.page
         ? parseInt(req.query.page.toString())
         : 1;
+
+      let ITEMS_PER_PAGE = 6;
+
       ITEMS_PER_PAGE = req.query.limit
         ? parseInt(req.query.limit.toString())
         : ITEMS_PER_PAGE;
