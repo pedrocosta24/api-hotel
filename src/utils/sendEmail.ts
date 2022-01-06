@@ -9,11 +9,13 @@ export const sendEmail = async (
   try {
     const transporter = nodemailer.createTransport({
       service: "gmail",
+      port: 465,
+      secure: true,
+
       auth: {
         user: process.env.MAIL_USER,
         pass: process.env.MAIL_PASS,
       },
-      secure: true,
     });
 
     await new Promise((resolve, reject) => {
