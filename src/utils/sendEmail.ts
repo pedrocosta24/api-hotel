@@ -8,8 +8,7 @@ export const sendEmail = async (
 ) => {
   try {
     const transporter = nodemailer.createTransport({
-      service: "smtp.gmail.com",
-      port: 465,
+      service: "gmail",
       secure: true,
       auth: {
         user: process.env.MAIL_USER,
