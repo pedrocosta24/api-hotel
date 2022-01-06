@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import "../lib/env";
 
 export const sendEmail = async (
   email: string,

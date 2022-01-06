@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import Joi from "joi";
 import bcrypt from "bcryptjs";
-
+import "../lib/env";
 import { UserModel } from "@models/User";
 import { TokenModel } from "@models/Token";
 import { sendEmail } from "../utils/sendEmail";
