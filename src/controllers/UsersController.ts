@@ -6,6 +6,7 @@ import { isAfter, parseISO, areIntervalsOverlapping } from "date-fns";
 import { IUser } from "src/utils/IUser";
 import { IBooking } from "src/utils/IBooking";
 import { IRoom } from "src/utils/IRoom";
+import mongoose from "mongoose";
 
 interface RequestWithToken extends Request {
   decoded: any;
@@ -531,6 +532,42 @@ export default class UsersController {
           res.status(400);
         }
       }).populate("bookings.room");
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async removeBooking(req: RequestWithToken, res: Response) {
+    let { id } = req.params;
+
+    try {
+      // set booking to cancelled status
+      User.findOne(
+        {
+          "bookings._id": new mongoose.Types.ObjectId(id),
+        },
+        (err: Error, user: any) => {
+          if (user) {
+            if (user.role === "ADMIN") {
+              user.bookings.forEach((booking: any) => {
+                if (booking._id.toString() === id) {
+                  booking.cancelled = true;
+                }
+              });
+              user
+                .save()
+                .then((updatedUser: any) => {
+                  res.sendStatus(204);
+                })
+                .catch((err: Error) => {
+                  res.status(400);
+                });
+            }
+          } else {
+            res.sendStatus(400);
+          }
+        }
+      );
     } catch (err) {
       console.error(err);
     }

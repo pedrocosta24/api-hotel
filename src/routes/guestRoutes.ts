@@ -26,4 +26,6 @@ router
   .get(usersController.myBookings) // Get bookings of logged in user
   .put(usersController.addBooking); // Add a booking to logged in user
 
+router.delete("/bookings/:id", usersController.removeBooking);
+
 export default router;

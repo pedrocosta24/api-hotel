@@ -28,6 +28,7 @@ let UserSchema = new Schema<IUser>({
         to: { type: Date },
       },
       no_nights: { type: Number },
+      cancelled: { type: Boolean, default: false },
       final_price: { type: Number },
     },
   ],
