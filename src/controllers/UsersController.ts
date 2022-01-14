@@ -102,16 +102,10 @@ export default class UsersController {
   async getBookingsFromUser(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      let page: number = req.query.page
-        ? parseInt(req.query.page.toString())
-        : 1;
-      ITEMS_PER_PAGE = req.query.limit
-        ? parseInt(req.query.limit.toString())
-        : ITEMS_PER_PAGE;
 
       User.findById(id, "bookings", (err: Error, bookings: IBooking[]) => {
         if (bookings) {
-          res.setHeader("x-total-count", bookings.length.toString());
+          // res.setHeader("x-total-count", bookings.length.toString());
           res.status(200).json(bookings);
         } else {
           res.status(400);
@@ -119,8 +113,6 @@ export default class UsersController {
       })
         .populate("bookings.room")
         .sort([[req.query.orderBy, req.query.direction]])
-        .limit(ITEMS_PER_PAGE)
-        .skip((page - 1) * ITEMS_PER_PAGE);
     } catch (err) {
       console.error(err);
     }
@@ -296,7 +288,7 @@ export default class UsersController {
   async getRoomsFromBookingsOfUser(req: Request, res: Response) {
     try {
       const { id } = req.params;
-
+      
       User.findById(id, "bookings.room", (err: Error, rooms: IRoom[]) => {
         if (rooms) {
           res.setHeader("x-total-count", rooms.length.toString());
